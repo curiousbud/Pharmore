@@ -1,0 +1,29 @@
+__pycache__/
+Lib/
+Scripts/
+CACHEDIR.TAG
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+*.swo
+env/
+venv/
+Lib/
+Scripts/
+bin/
+Include/
+pyvenv.cfg
+.vscode/
+# System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Cache
+*.cache
+*.bak
+*.tmp
+*.old
+*.orig
