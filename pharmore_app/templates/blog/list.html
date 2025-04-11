@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Community Blog</h2>
+        <a href="{% url 'create_post' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Post
+        </a>
+    </div>
+    
+    {% for post in posts %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <small class="text-muted">
+                    Posted by {{ post.author.username }} on 
+                    {{ post.created_at|date:"M j, Y" }}
+                </small>
+                {% if request.user == post.author or request.user.is_staff %}
+                <form method="post" action="{% url 'delete_post' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            <p class="card-text">{{ post.content|linebreaksbr }}</p>
+            
+            <div class="d-flex align-items-center gap-2">
+                <form method="post" action="{% url 'toggle_like' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm {% if request.user in post.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        <i class="bi bi-heart"></i> {{ post.likes.count }}
+                    </button>
+                </form>
+                <a href="{% url 'blog_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-chat"></i> {{ post.comment_set.count }}
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">
+        No posts yet. Be the first to share!
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

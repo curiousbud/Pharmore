@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Order #{{ order.id }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Order Details</h5>
+                    <p><strong>Date:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+                    <p><strong>Total:</strong> ₹{{ order.total_price }}</p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="{% url 'download_receipt' order.id %}" 
+                   class="btn btn-lg btn-success">
+                   <i class="bi bi-file-earmark-pdf"></i> Download Receipt
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

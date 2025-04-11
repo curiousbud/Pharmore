@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg">
+    <h1 class="display-4">Welcome to Pharmore!</h1>
+    <p class="lead">Your Trusted Online Pharmacy</p>
+    <hr class="my-4">
+    <p>Get genuine medicines delivered fast. Consult with certified pharmacists 24/7.</p>
+    {% if not user.is_authenticated %}
+    <div class="mt-4">
+        <a class="btn btn-primary btn-lg" href="{% url 'user_register' %}" role="button">Get Started</a>
+        <a class="btn btn-outline-secondary btn-lg" href="{% url 'login' %}" role="button">Login</a>
+    </div>
+    {% endif %}
+</div>
+
+{% if featured_items %}
+<section class="featured-medicines mb-5">
+    <h3 class="mb-4">Featured Medicines</h3>
+    <div class="row">
+        {% for item in featured_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text text-muted">{{ item.description|truncatechars:100 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="h5">${{ item.price }}</span>
+                            <small class="text-muted d-block">In stock: {{ item.quantity }}</small>
+                        </div>
+                        {% if user.is_authenticated and not user.is_staff %}
+                        <form method="post" action="{% url 'add_to_cart' item.id %}" class="w-50">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="number" 
+                                       name="quantity" 
+                                       class="form-control" 
+                                       value="1" 
+                                       min="1" 
+                                       max="{{ item.quantity }}">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-cart-plus"></i>
+                                </button>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if item.is_featured %}
+                <div class="card-footer bg-primary text-white">
+                    <small>Featured Medicine</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="services mb-5">
+    <h3 class="mb-4">Our Services</h3>
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i class="bi bi-prescription2 fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Download receipts</h5>
+                    <p class="card-text">You can download your recipts easily and carry it anywhere</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i class="bi bi-clock-history fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">24/7 Support</h5>
+                    <p class="card-text">Round-the-clock customer service and pharmacist support</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i class="bi bi-shield-check fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Quality Guaranteed</h5>
+                    <p class="card-text">100% genuine medicines from verified suppliers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if user.is_authenticated and recent_posts %}
+<section class="community-news">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Latest Community Posts</h3>
+        <a href="{% url 'blog_list' %}" class="btn btn-outline-primary">
+            See All Posts <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+    <div class="row">
+        {% for post in recent_posts %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text text-muted">
+                        <small>Posted by {{ post.author.username }} on {{ post.created_at|date:"M d, Y" }}</small>
+                    </p>
+                    <p class="card-text">{{ post.content|truncatechars:150 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <form method="post" action="{% url 'toggle_like' post.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm {% if request.user in post.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                    <i class="bi bi-heart"></i> {{ post.likes.count }}
+                                </button>
+                            </form>
+                            <a href="{% url 'blog_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-chat"></i> {{ post.comment_set.count }}
+                            </a>
+                        </div>
+                        <a href="{% url 'blog_detail' post.id %}" class="btn btn-sm btn-link">
+                            Read More <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

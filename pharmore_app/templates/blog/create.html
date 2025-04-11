@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Create New Blog Post</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_title" class="form-label">Title</label>
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            <label for="id_content" class="form-label">Content</label>
+            {{ form.content }}
+            <small class="form-text text-muted">Write your post content here</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Publish Post</button>
+        <a href="{% url 'blog_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Available Medicines</h2>
+<div class="row">
+    {% for item in items %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.name }}</h5>
+                <p class="card-text">Price: ${{ item.price }}</p>
+                <p class="card-text">Stock: {{ item.quantity }}</p>
+                
+                <form method="post" action="{% url 'add_to_cart' item.id %}">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="number" 
+                               name="quantity" 
+                               class="form-control" 
+                               value="1" 
+                               min="1" 
+                               max="{{ item.quantity }}">
+                        <button type="submit" class="btn btn-primary">
+                            Add to Cart
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

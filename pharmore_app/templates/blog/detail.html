@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <article class="blog-post">
+        <h1>{{ post.title }}</h1>
+        <p class="text-muted">
+            By {{ post.author.email }} | {{ post.created_at|date:"F j, Y" }}
+        </p>
+        <div class="post-content mb-5">
+            {{ post.content|linebreaks }}
+        </div>
+        
+        <div class="comments-section">
+            <h3>Comments ({{ comments.count }})</h3>
+            
+            {% if user.is_authenticated %}
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+            {% endif %}
+            
+            {% for comment in comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>{{ comment.author.email }}</strong>
+                            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                        </div>
+                        {% if comment.author == request.user or request.user.is_staff %}
+                        <form method="post" action="{% url 'delete_comment' comment.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <p class="mt-2">{{ comment.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </article>
+</div>
+{% endblock %}

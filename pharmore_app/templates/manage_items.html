@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Items{% endblock %}
+
+{% block content %}
+<h2>Manage Medicines</h2>
+<a href="{% url 'add_item' %}" class="btn btn-primary mb-3">Add New Item</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>${{ item.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>
+                {{ item.quantity }}
+                <a href="{% url 'update_stock' item.id %}" 
+                   class="btn btn-sm btn-outline-secondary ms-2">
+                   Update
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'delete_item' item.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

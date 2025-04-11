@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Update Stock for {{ item.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="quantity" class="form-label">New Quantity</label>
+            <input type="number" 
+                   class="form-control" 
+                   id="quantity" 
+                   name="quantity" 
+                   value="{{ item.quantity }}"
+                   min="0"
+                   required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Stock</button>
+        <a href="{% url 'manage_items' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
