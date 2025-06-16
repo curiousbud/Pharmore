@@ -2,6 +2,7 @@
 
 Pharmore is a robust and user-friendly Django-based inventory management system built specifically for pharmacy stores. It helps pharmacy owners and staff track medicine stock, manage suppliers, handle purchases and sales, and generate professional reports—all from a modern web interface.
 
+### Live Demo [Here](https://curiousbud.pythonanywhere.com/).
 ## 📦 Features
 
 - ✅ Real-time inventory tracking
